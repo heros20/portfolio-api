@@ -3,7 +3,20 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL!;
 const RECAPTCHA_SECRET = process.env.RECAPTCHA_SECRET!;
 
+// Handler API contact avec gestion CORS pour GitHub Pages
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // --- PATCH CORS ---
+  res.setHeader("Access-Control-Allow-Origin", "https://heros20.github.io");
+  res.setHeader("Vary", "Origin");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    // Préflight CORS
+    res.status(204).end();
+    return;
+  }
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Méthode non autorisée" });
   }
